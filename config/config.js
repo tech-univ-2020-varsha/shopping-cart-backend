@@ -3,7 +3,7 @@ module.exports = {
     username: process.env.DEV_USERNAME,
     password: process.env.DEV_PASSWORD,
     database: 'shoppingcart',
-    host: '127.0.0.1',
+    host: 'localhost',
     dialect: 'postgres',
     operatorsAliases: false,
   },

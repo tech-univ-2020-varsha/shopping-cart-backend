@@ -1,3 +1,4 @@
 const ping = require('./ping');
+const products = require('./products');
 
-module.exports = [...ping];
+module.exports = [...ping, ...products];
