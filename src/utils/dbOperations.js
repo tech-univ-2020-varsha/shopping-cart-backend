@@ -31,4 +31,35 @@ const updateCart = async (cartDetails) => {
   }
 };
 
-module.exports = { getProductsData, insertProducts, updateCart };
+const getCartData = async () => {
+  try {
+    const result = await db.cart.findAll({ raw: true });
+    return result;
+  } catch (err) {
+    throw new Error('Unable to get cart details');
+  }
+};
+
+const updateProductTable = async (cartDetails) => {
+  try {
+    await db.cart.destroy({ truncate: true });
+    await Promise.all(cartDetails.map(async (prod) => {
+      const cartProductQuantity = prod.quantity;
+      await db.products.decrement(
+        'quantity', {
+          by: cartProductQuantity,
+          where: {
+            id: prod.id,
+          },
+          returning: true, // to get updated data back
+        },
+      );
+    }));
+  } catch (err) {
+    throw new Error('Unable to update product details');
+  }
+};
+
+module.exports = {
+  getProductsData, insertProducts, updateCart, getCartData, updateProductTable,
+};

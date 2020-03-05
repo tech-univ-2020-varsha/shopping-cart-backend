@@ -86,3 +86,86 @@ describe('the updateCart operation', () => {
     }
   });
 });
+
+
+describe('the getCart operation', () => {
+  const cartsdb = shoppingCartSequelize.cart;
+
+  it('should get all products details on success', async () => {
+    const mockFindAll = jest.spyOn(cartsdb, 'findAll');
+    mockFindAll.mockResolvedValue();
+    await dbOperations.getCartData();
+    expect(mockFindAll).toHaveBeenCalledWith({ raw: true });
+  });
+
+  it('should return error message when all products cant be retrived', async () => {
+    try {
+      const mockFindAll = jest.spyOn(cartsdb, 'findAll');
+      mockFindAll.mockRejectedValue(new Error('Unable to get cart details'));
+      await dbOperations.getCartData();
+      expect(mockFindAll).toHaveBeenCalledWith({ raw: true });
+    } catch (err) {
+      expect(err.message).toBe('Unable to get cart details');
+    }
+  });
+});
+
+describe('the update products operation', () => {
+  const cartsdb = shoppingCartSequelize.cart;
+  const productsdb = shoppingCartSequelize.products;
+  const mockCartDetails = [
+    {
+      id: 1,
+      name: 'Apple - 1kg',
+      price: 210,
+      quantity: 2,
+      imageLink: 'https://techunic-eval4.s3.amazonaws.com/apple.jpg',
+      category: 'fruits',
+      total: 420,
+      createdAt: '2020-03-05T09:24:50.916Z',
+      updatedAt: '2020-03-05T09:24:50.916Z',
+    },
+  ];
+  it('should update the quantity of product on success', async () => {
+    const mockDestroy = jest.spyOn(cartsdb, 'destroy');
+    mockDestroy.mockResolvedValue();
+    const destroyArgs = { truncate: true };
+    const mockDecrement = jest.spyOn(productsdb, 'decrement');
+    mockDecrement.mockResolvedValue();
+    await dbOperations.updateProductTable(mockCartDetails);
+    expect(mockDestroy).toHaveBeenCalledWith(destroyArgs);
+
+    mockCartDetails.map((cart) => {
+      expect(mockDecrement).toHaveBeenCalledWith('quantity', {
+        by: cart.quantity,
+        where: {
+          id: cart.id,
+        },
+        returning: true, // to get updated data back
+      });
+    });
+  });
+
+
+  it('should return an failure messgage when deleting all cart product fails', async () => {
+    try {
+      const mockDestroy = jest.spyOn(cartsdb, 'destroy');
+      mockDestroy.mockRejectedValue(new Error('Unable to update product details'));
+      await dbOperations.updateProductTable(mockCartDetails);
+    } catch (err) {
+      expect(err.message).toBe('Unable to update product details');
+    }
+  });
+
+  it('should return an failure messgage when updating the product table fails', async () => {
+    try {
+      const mockDestroy = jest.spyOn(cartsdb, 'destroy');
+      mockDestroy.mockResolvedValue();
+      const mockDecrement = jest.spyOn(productsdb, 'decrement');
+      mockDecrement.mockRejectedValue(new Error('Unable to update product details'));
+      await dbOperations.updateProductTable(mockCartDetails);
+    } catch (err) {
+      expect(err.message).toBe('Unable to update product details');
+    }
+  });
+});

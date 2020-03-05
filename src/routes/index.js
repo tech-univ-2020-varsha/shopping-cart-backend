@@ -1,5 +1,6 @@
 const ping = require('./ping');
 const products = require('./products');
-const updateCart = require('./updateCart');
+const cart = require('./cart');
+const checkout = require('./checkout');
 
-module.exports = [...ping, ...products, ...updateCart];
+module.exports = [...ping, ...products, ...cart, ...checkout];
