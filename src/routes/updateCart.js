@@ -1,9 +1,15 @@
 const { updateCartDetails } = require('../handler/updateCart');
+const { updateCartSchema } = require('../schemas/updateCartSchema');
 
 const updateCart = [{
   path: '/cart',
   method: 'PUT',
-  handler: updateCartDetails,
+  config: {
+    validate: {
+      payload: updateCartSchema,
+    },
+    handler: updateCartDetails,
+  },
 },
 ];
 
