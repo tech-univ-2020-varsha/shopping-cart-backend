@@ -1,0 +1,38 @@
+{
+  "name": "shopping-cart-backend",
+  "version": "1.0.0",
+  "description": "shopping-cart",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tech-univ-2020-varsha/shopping-cart-backend.git"
+  },
+  "keywords": [
+    "shopping",
+    "cart"
+  ],
+  "author": "varshacl",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tech-univ-2020-varsha/shopping-cart-backend/issues"
+  },
+  "homepage": "https://github.com/tech-univ-2020-varsha/shopping-cart-backend#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/joi": "^17.1.0",
+    "nodemon": "^2.0.2",
+    "pg": "^7.18.2",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.5",
+    "sequelize-cli": "^5.5.1"
+  }
+}
