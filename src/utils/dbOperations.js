@@ -18,4 +18,17 @@ const insertProducts = async (products) => {
   }
 };
 
-module.exports = { getProductsData, insertProducts };
+
+const updateCart = async (cartDetails) => {
+  try {
+    const result = await db.cart.bulkCreate(cartDetails, {
+      fields: ['id', 'name', 'price', 'quantity', 'imageLink', 'category', 'total'],
+      updateOnDuplicate: ['id', 'quantity', 'total'],
+    });
+    return result;
+  } catch (err) {
+    throw new Error('Unable to update cart');
+  }
+};
+
+module.exports = { getProductsData, insertProducts, updateCart };
