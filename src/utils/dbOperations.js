@@ -40,6 +40,21 @@ const getCartData = async () => {
   }
 };
 
+const deleteProductFromCart = async (id) => {
+  try {
+    const result = await db.cart.destroy(
+      {
+        where: {
+          id,
+        },
+      },
+    );
+    return result;
+  } catch (err) {
+    throw new Error('Unable to delete the cart item');
+  }
+};
+
 const updateProductTable = async (cartDetails) => {
   try {
     await db.cart.destroy({ truncate: true });
@@ -61,5 +76,5 @@ const updateProductTable = async (cartDetails) => {
 };
 
 module.exports = {
-  getProductsData, insertProducts, updateCart, getCartData, updateProductTable,
+  getProductsData, insertProducts, updateCart, getCartData, updateProductTable, deleteProductFromCart,
 };

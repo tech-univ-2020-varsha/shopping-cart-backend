@@ -169,3 +169,41 @@ describe('the update products operation', () => {
     }
   });
 });
+
+
+describe('the  delete products from db function', () => {
+  it('should delete the cart item on success', async () => {
+    const mockId = 1;
+    const destroyArgs = {
+      where: {
+        id: mockId,
+      },
+    };
+
+    const cartsdb = shoppingCartSequelize.cart;
+    const mockDestroy = jest.spyOn(cartsdb, 'destroy');
+    mockDestroy.mockResolvedValue();
+    await dbOperations.deleteProductFromCart(mockId);
+    expect(mockDestroy).toHaveBeenCalledWith(destroyArgs);
+    mockDestroy.mockRestore();
+  });
+
+  it('should return the error the cart item couldnt be deleted', async () => {
+    const mockId = 1;
+    const destroyArgs = {
+      where: {
+        id: mockId,
+      },
+    };
+
+    const cartsdb = shoppingCartSequelize.cart;
+    const mockDestroy = jest.spyOn(cartsdb, 'destroy');
+    mockDestroy.mockRejectedValue(new Error('Unable to delete the cart item'));
+    try {
+      await dbOperations.deleteProductFromCart(mockId);
+    } catch (err) {
+      expect(err.message).toBe('Unable to delete the cart item');
+    }
+    mockDestroy.mockRestore();
+  });
+});

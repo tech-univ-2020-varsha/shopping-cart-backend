@@ -81,4 +81,35 @@ describe('the update cart details handler', () => {
     expect(mockUpdateCart).toHaveBeenCalledWith(updateProducts);
     mockUpdateCart.mockRestore();
   });
+
+  it('should obtain updated cart details and delete cart item from db when quantity of that cart item becomes 0 as response and status code of 200  when cart table is updated succesfully', async () => {
+    const mockRequest = {
+      payload: {
+        products: [
+          {
+            id: 16,
+            name: 'Aluminum foil - 9m',
+            price: 71,
+            quantity: 0,
+            imageLink: 'https://techunic-eval4.s3.amazonaws.com/aluminumfoil.jpg',
+            category: 'household',
+
+          },
+        ],
+      },
+    };
+    const mockCode = jest.fn();
+    const mockH = {
+      response: jest.fn(() => ({ code: mockCode })),
+    };
+    const mockDeleteProductFromCart = jest.spyOn(dbOperations, 'deleteProductFromCart');
+    mockDeleteProductFromCart.mockResolvedValue();
+    const mockUpdateCart = jest.spyOn(dbOperations, 'updateCart');
+    mockUpdateCart.mockResolvedValue([]);
+    await updateCartDetails(mockRequest, mockH);
+    expect(mockH.response).toHaveBeenCalledWith([]);
+    expect(mockCode).toHaveBeenCalledWith(200);
+    expect(mockUpdateCart).toHaveBeenCalledWith([]);
+    mockUpdateCart.mockRestore();
+  });
 });

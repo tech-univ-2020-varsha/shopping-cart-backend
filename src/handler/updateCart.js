@@ -3,7 +3,10 @@ const dbOperations = require('../utils/dbOperations');
 const updateCartDetails = async (request, h) => {
   try {
     let cartDetails = request.payload.products;
-    cartDetails = cartDetails.filter((product) => product.quantity !== 0);
+    cartDetails = cartDetails.filter((product) => {
+      if (product.quantity === 0) { dbOperations.deleteProductFromCart(product.id); }
+      return product.quantity !== 0;
+    });
     const newCartDetails = cartDetails.map((product) => {
       const newProduct = product;
       newProduct.total = product.quantity * product.price;
